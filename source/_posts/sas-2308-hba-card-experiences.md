@@ -11,6 +11,8 @@ categories:
 date: 2022-12-10 16:46:39
 ---
 
+![](screenshot_20221210_164704.jpg)
+
 Got another SAS 2308 card from Amazon. A.k.a. SAS 9217-8i
 
 Now this is a proper SAS HBA card that can be used for software RAID (e.g. zfs).
@@ -52,7 +54,8 @@ Rename it to shell.efi as required by my motherboard.
 
 So, prepare the following files on a FAT32 disk:
 
-\# Firmware binary
+```bash
+# Firmware binary
 9207-8.bin
 # SAS BIOS binary
 mptsas2.rom
@@ -60,6 +63,7 @@ mptsas2.rom
 sas2flash.efi
 # UEFI shell application
 shell.efi
+```
 
 #### Firmware flashing
 
@@ -79,17 +83,17 @@ Erase card's flash:
 
 Flash new firmware:
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/screenshot_20221210_165209.png.jpg?w=1024)
+![](screenshot_20221210_165209.png.jpg)
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/screenshot_20221210_165250.png.jpg?w=1024)
+![](screenshot_20221210_165250.png.jpg)
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/screenshot_20221210_165321.png.jpg?w=1024)
+![](screenshot_20221210_165321.png.jpg)
 
 Check new firmware is loaded:
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/screenshot_20221210_165356.png.jpg?w=1024)
+![](screenshot_20221210_165356.png.jpg)
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/screenshot_20221210_165510.png.jpg?w=1024)
+![](screenshot_20221210_165510.png.jpg)
 
 ### DOS flashing
 
@@ -103,9 +107,9 @@ A windows executable is also available.
 
 It is able to find and manage the card:
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/image-4.png?w=1024)
+![](image-4.png)
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/image-5.png?w=621)
+![](image-5.png)
 
 However, the Windows executable is unable to flash from IR mode firmware to IT mode firmware.
 It must be done at a pre-boot environment.
@@ -122,4 +126,4 @@ So, be prepared to strap a small fan on top of the card's heatsink, as otherwise
 
 Unfortunately the IT mode firmware does not support reporting card's temperature...
 
-![](https://zhiyb.wordpress.com/wp-content/uploads/2022/12/screenshot_20221210_172423.png.jpg?w=1024)
+![](screenshot_20221210_172423.png.jpg)
