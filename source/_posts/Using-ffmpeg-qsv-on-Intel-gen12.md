@@ -2,6 +2,11 @@
 title: Using ffmpeg qsv on Intel gen12
 date: 2025-04-13 01:50:20
 tags:
+  - ffmpeg
+  - qsv
+  - Intel
+  - i7-12650H
+  - minisforum
 ---
 
 I had some troubles enabling ffmpeg qsv hardware acceleration on my i7-12650H CPU, managed to solve it.
