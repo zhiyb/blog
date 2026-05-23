@@ -2250,3 +2250,73 @@ The string is random so that I can find out what's the actual offsets for them.
 And now I can fill any string I like as the serial number:
 
 ![Custom serial number](<Screenshot 2026-05-23 141940.png>)
+
+## Where is the AES key from?
+
+The data at `0x801a708c` is:
+```c
+(gdb) x/8bx 0x801a708c
+0x801a708c:     0x21    0x21    0x01    0xde    0xad    0xbe    0xef    0x29
+```
+
+But where is it actually coming from?
+
+AI was not able to find it, but using QEMU + gdb breakpoints, we can find the code here:
+
+```c
+  // 8003f378
+  switch(msc->cmd) {
+  ...
+  case 2:
+    if (DAT_804877a4 == 0) {
+      iVar3 = FUN_8003ec00(msc,&DAT_804877b8);
+    }
+    else {
+      iVar3 = FUN_8003ecd4(msc,&DAT_804877b8);
+    }
+    if (iVar3 == 0) {
+                    /* AES key */
+      memcpy(&DAT_801a7084,&msc->aes_key,0x10);
+    }
+    else {
+      memset(&DAT_801a7084,0,0x10);
+      if (iVar3 != 0x14) {
+        return 2;
+      }
+    }
+```
+
+It looks related to MMC `CMD2`, which is `ALL_SEND_CID`.
+Let's check what values QEMU fills the MMC `CID` register with:
+
+```c
+// hw/sd/sd.c
+
+/* Card IDentification register */
+
+#define MID     0xaa
+#define OID     "XY"
+#define PNM     "QEMU!"
+#define PRV     0x01
+#define MDT_YR  2006
+#define MDT_MON 2
+
+static void emmc_set_cid(SDState *sd)
+{
+    sd->cid[0] = MID;       /* Fake card manufacturer ID (MID) */
+    sd->cid[1] = 0b01;      /* CBX: soldered BGA */
+    sd->cid[2] = OID[0];    /* OEM/Application ID (OID) */
+    sd->cid[3] = PNM[0];    /* Fake product name (PNM) */
+    sd->cid[4] = PNM[1];
+    sd->cid[5] = PNM[2];
+    sd->cid[6] = PNM[3];
+    sd->cid[7] = PNM[4];
+    sd->cid[8] = PNM[4];
+    sd->cid[9] = PRV;       /* Fake product revision (PRV) */
+    stl_be_p(&sd->cid[10], 0xdeadbeef); /* Fake serial number (PSN) */
+    sd->cid[14] = (MDT_MON << 4) | (MDT_YR - 1997); /* Manufacture date (MDT) */
+    sd->cid[15] = (sd_crc7(sd->cid, 15) << 1) | 1;
+}
+```
+
+Mystery solved, it is just `CID` register bytes 7 to 14.
