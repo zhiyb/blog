@@ -2320,3 +2320,8 @@ static void emmc_set_cid(SDState *sd)
 ```
 
 Mystery solved, it is just `CID` register bytes 7 to 14.
+
+# Scripts
+
+Relevant scripts can be found at my GitHub repo:
+https://github.com/zhiyb/eebbk_tools
