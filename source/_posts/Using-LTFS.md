@@ -32,18 +32,14 @@ Instead, we can mount LTFS using the AuroraTape project docker container.
 
 To access the tape drive inside the container, we need to find the `/dev/sg*` device file pointing to the tape drive.
 
-I found it by trying to read device attributes:
+Use `sg_map` to find the tape drive `/dev/nst0`, e.g.:
 
 ```bash
-$ sudo sg_read_attr /dev/sg1
-Read attribute command not supported
-sg_read_attr failed: Illegal request, Invalid opcode
-
-$ sudo sg_read_attr /dev/sg2
-Attribute values:
-  Remaining capacity in partition [MiB]: 36750
-  Maximum capacity in partition [MiB]: 36750
-  ...
+$ sudo sg_map
+/dev/sg0
+/dev/sg1  /dev/sda
+/dev/sg2  /dev/nst0
+/dev/sg3  /dev/sdf
 ```
 
 ## Start a shell inside the container
